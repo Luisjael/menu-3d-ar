@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Menú 3D — Ver en tu mesa</title>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+<style>
+  :root{
+    --ink:#1c1712;
+    --cream:#f7f1e6;
+    --clay:#b5502e;
+    --olive:#5c6b47;
+    --line:#d8cdb8;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Georgia', 'Times New Roman', serif;
+    background:var(--cream);
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:24px 16px 60px;
+  }
+  header{
+    text-align:center;
+    margin-bottom:18px;
+    max-width:480px;
+  }
+  .eyebrow{
+    font-family:'Courier New', monospace;
+    letter-spacing:0.18em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--clay);
+    margin-bottom:8px;
+  }
+  h1{
+    font-size:28px;
+    font-weight:400;
+    line-height:1.2;
+  }
+  p.sub{
+    font-size:14px;
+    color:#5a5248;
+    margin-top:8px;
+  }
+  .card{
+    width:100%;
+    max-width:480px;
+    background:#fffdf8;
+    border:1px solid var(--line);
+    border-radius:4px;
+    overflow:hidden;
+    box-shadow:0 6px 24px rgba(28,23,18,0.08);
+  }
+  model-viewer{
+    width:100%;
+    height:360px;
+    background:radial-gradient(circle at 50% 30%, #efe6d3, #e2d5b8);
+    --poster-color: transparent;
+  }
+  .dish-info{
+    padding:20px 22px 24px;
+    border-top:1px solid var(--line);
+  }
+  .dish-info h2{
+    font-size:20px;
+    font-weight:400;
+  }
+  .dish-info p{
+    font-size:13.5px;
+    color:#6b6255;
+    margin-top:6px;
+    line-height:1.5;
+  }
+  .price{
+    font-family:'Courier New', monospace;
+    font-size:15px;
+    color:var(--olive);
+    margin-top:10px;
+  }
+  button.ar-btn{
+    margin-top:16px;
+    width:100%;
+    padding:13px;
+    background:var(--clay);
+    color:#fff;
+    border:none;
+    border-radius:3px;
+    font-family:'Courier New', monospace;
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  button.ar-btn:active{opacity:0.85;}
+  .notice{
+    max-width:480px;
+    margin-top:22px;
+    font-size:12.5px;
+    color:#8a8171;
+    border-left:2px solid var(--clay);
+    padding-left:12px;
+    line-height:1.6;
+  }
+  .notice b{color:var(--ink);}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">Menú Aumentado — Demo</div>
+  <h1>Toca "Ver en mi mesa" para probar la realidad aumentada</h1>
+  <p class="sub">Este es un modelo 3D de muestra. Cuando tengas el escaneo real de tu plato (Polycam / RealityScan), solo se reemplaza el archivo .glb — el resto del código no cambia.</p>
+</header>
+
+<div class="card">
+  <model-viewer
+    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
+    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+    alt="Modelo 3D de muestra del plato"
+    ar
+    ar-modes="webxr scene-viewer quick-look"
+    camera-controls
+    auto-rotate
+    shadow-intensity="1"
+    exposure="0.9"
+  >
+    <button slot="ar-button" class="ar-btn">Ver en mi mesa (AR)</button>
+  </model-viewer>
+
+  <div class="dish-info">
+    <h2>Nombre del plato (editar)</h2>
+    <p>Descripción corta del plato: ingredientes principales, algo que lo haga apetecible en una frase.</p>
+    <div class="price">RD$ 450</div>
+  </div>
+</div>
+
+<div class="notice">
+  <b>Cómo probarlo en tu celular:</b> este archivo necesita estar servido por HTTPS para que el botón de AR funcione (GitHub Pages, Netlify o Render sirven). Ábrelo directo desde Chrome en Android o Safari en iPhone — no funciona bien si lo abres como archivo local sin subir.
+</div>
+
+</body>
+</html>
