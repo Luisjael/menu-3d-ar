@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
@@ -82,6 +82,41 @@
     color:var(--olive);
     margin-top:10px;
   }
+  button.ar-btn{
+    margin-top:16px;
+    width:100%;
+    padding:13px;
+    background:var(--clay);
+    color:#fff;
+    border:none;
+    border-radius:3px;
+    font-family:'Courier New', monospace;
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  button.ar-btn:active{opacity:0.85;}
+  .ar-btn-big{
+    display:block;
+    width:calc(100% - 44px);
+    margin:14px 22px 0;
+    padding:14px;
+    background:var(--clay);
+    color:#fff;
+    border:none;
+    border-radius:3px;
+    font-family:'Courier New', monospace;
+    font-size:13px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  .ar-btn-big:disabled{
+    background:#c9beac;
+    cursor:default;
+  }
+  .ar-btn-big:active:not(:disabled){opacity:0.85;}
   .notice{
     max-width:480px;
     margin-top:22px;
@@ -113,11 +148,11 @@
     auto-rotate
     shadow-intensity="1"
     exposure="0.9"
+    id="viewer"
   >
   </model-viewer>
-  <p style="text-align:center;font-family:'Courier New',monospace;font-size:11px;color:#8a8171;padding:8px 0 0;">
-    Busca el ícono de cubo (⬚) abajo a la derecha del modelo para activar AR
-  </p>
+  <button id="arBtn" class="ar-btn-big" disabled>Verificando soporte AR…</button>
+  <p id="arMsg" style="text-align:center;font-family:'Courier New',monospace;font-size:11px;color:#8a8171;padding:8px 16px 0;"></p>
 
   <div class="dish-info">
     <h2>Nombre del plato (editar)</h2>
@@ -130,5 +165,38 @@
   <b>Cómo probarlo en tu celular:</b> este archivo necesita estar servido por HTTPS para que el botón de AR funcione (GitHub Pages, Netlify o Render sirven). Ábrelo directo desde Chrome en Android o Safari en iPhone — no funciona bien si lo abres como archivo local sin subir.
 </div>
 
+<script>
+  const viewer = document.getElementById('viewer');
+  const btn = document.getElementById('arBtn');
+  const msg = document.getElementById('arMsg');
+
+  viewer.addEventListener('ar-status', (event) => {
+    if (event.detail.status === 'session-started') {
+      msg.textContent = 'Sesión AR activa — mueve el celular para encontrar una superficie.';
+    } else if (event.detail.status === 'not-presenting') {
+      msg.textContent = '';
+    } else if (event.detail.status === 'failed') {
+      msg.textContent = 'No se pudo activar AR en este dispositivo/navegador.';
+    }
+  });
+
+  function checkSupport() {
+    if (viewer.canActivateAR) {
+      btn.disabled = false;
+      btn.textContent = 'Ver en mi mesa (AR)';
+    } else {
+      btn.disabled = true;
+      btn.textContent = 'AR no disponible en este navegador';
+      msg.textContent = 'Prueba con Chrome (Android) o Safari (iPhone), asegúrate de estar en https.';
+    }
+  }
+
+  viewer.addEventListener('load', checkSupport);
+  setTimeout(checkSupport, 1500);
+
+  btn.addEventListener('click', () => {
+    viewer.activateAR();
+  });
+</script>
 </body>
 </html>
