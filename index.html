@@ -26,7 +26,7 @@
   }
   header{
     text-align:center;
-    margin-bottom:18px;
+    margin-bottom:22px;
     max-width:480px;
   }
   .eyebrow{
@@ -47,9 +47,15 @@
     color:#5a5248;
     margin-top:8px;
   }
-  .card{
+  #menu{
     width:100%;
     max-width:480px;
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+  }
+  .card{
+    width:100%;
     background:#fffdf8;
     border:1px solid var(--line);
     border-radius:4px;
@@ -58,12 +64,12 @@
   }
   model-viewer{
     width:100%;
-    height:360px;
+    height:340px;
     background:radial-gradient(circle at 50% 30%, #efe6d3, #e2d5b8);
     --poster-color: transparent;
   }
   .dish-info{
-    padding:20px 22px 24px;
+    padding:20px 22px 4px;
     border-top:1px solid var(--line);
   }
   .dish-info h2{
@@ -82,21 +88,6 @@
     color:var(--olive);
     margin-top:10px;
   }
-  button.ar-btn{
-    margin-top:16px;
-    width:100%;
-    padding:13px;
-    background:var(--clay);
-    color:#fff;
-    border:none;
-    border-radius:3px;
-    font-family:'Courier New', monospace;
-    font-size:13px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    cursor:pointer;
-  }
-  button.ar-btn:active{opacity:0.85;}
   .ar-btn-big{
     display:block;
     width:calc(100% - 44px);
@@ -117,9 +108,16 @@
     cursor:default;
   }
   .ar-btn-big:active:not(:disabled){opacity:0.85;}
+  .ar-msg{
+    text-align:center;
+    font-family:'Courier New', monospace;
+    font-size:11px;
+    color:#8a8171;
+    padding:8px 16px 20px;
+  }
   .notice{
     max-width:480px;
-    margin-top:22px;
+    margin-top:26px;
     font-size:12.5px;
     color:#8a8171;
     border-left:2px solid var(--clay);
@@ -132,71 +130,94 @@
 <body>
 
 <header>
-  <div class="eyebrow">Menú Aumentado — Demo</div>
-  <h1>Toca "Ver en mi mesa" para probar la realidad aumentada</h1>
-  <p class="sub">Este es un modelo 3D de muestra. Cuando tengas el escaneo real de tu plato (Polycam / RealityScan), solo se reemplaza el archivo .glb — el resto del código no cambia.</p>
+  <div class="eyebrow">Menú Aumentado</div>
+  <h1 id="pageTitle">Toca "Ver en mi mesa" en cualquier plato</h1>
+  <p class="sub" id="pageSub">Cargando menú…</p>
 </header>
 
-<div class="card">
-  <model-viewer
-    src="https://modelviewer.dev/shared-assets/models/Astronaut.glb"
-    ios-src="https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
-    alt="Modelo 3D de muestra del plato"
-    ar
-    ar-modes="webxr scene-viewer quick-look"
-    camera-controls
-    auto-rotate
-    shadow-intensity="1"
-    exposure="0.9"
-    id="viewer"
-  >
-  </model-viewer>
-  <button id="arBtn" class="ar-btn-big" disabled>Verificando soporte AR…</button>
-  <p id="arMsg" style="text-align:center;font-family:'Courier New',monospace;font-size:11px;color:#8a8171;padding:8px 16px 0;"></p>
-
-  <div class="dish-info">
-    <h2>Nombre del plato (editar)</h2>
-    <p>Descripción corta del plato: ingredientes principales, algo que lo haga apetecible en una frase.</p>
-    <div class="price">RD$ 450</div>
-  </div>
-</div>
+<div id="menu"></div>
 
 <div class="notice">
-  <b>Cómo probarlo en tu celular:</b> este archivo necesita estar servido por HTTPS para que el botón de AR funcione (GitHub Pages, Netlify o Render sirven). Ábrelo directo desde Chrome en Android o Safari en iPhone — no funciona bien si lo abres como archivo local sin subir.
+  <b>Cómo agregar un plato nuevo:</b> edita el archivo <code>dishes.json</code> — agrega un objeto nuevo con el nombre, descripción, precio, y el link a tu archivo <code>.glb</code> (guárdalo en la carpeta <code>models/</code>). No hay que tocar este archivo HTML.
 </div>
 
 <script>
-  const viewer = document.getElementById('viewer');
-  const btn = document.getElementById('arBtn');
-  const msg = document.getElementById('arMsg');
+  const menu = document.getElementById('menu');
+  const pageSub = document.getElementById('pageSub');
 
-  viewer.addEventListener('ar-status', (event) => {
-    if (event.detail.status === 'session-started') {
-      msg.textContent = 'Sesión AR activa — mueve el celular para encontrar una superficie.';
-    } else if (event.detail.status === 'not-presenting') {
-      msg.textContent = '';
-    } else if (event.detail.status === 'failed') {
-      msg.textContent = 'No se pudo activar AR en este dispositivo/navegador.';
-    }
-  });
+  fetch('dishes.json')
+    .then(res => res.json())
+    .then(dishes => {
+      pageSub.textContent = 'Este es un demo. Reemplaza los platos editando dishes.json.';
+      dishes.forEach(dish => renderDish(dish));
+    })
+    .catch(err => {
+      pageSub.textContent = 'No se pudo cargar dishes.json — revisa que el archivo exista.';
+      console.error(err);
+    });
 
-  function checkSupport() {
-    if (viewer.canActivateAR) {
-      btn.disabled = false;
-      btn.textContent = 'Ver en mi mesa (AR)';
-    } else {
-      btn.disabled = true;
-      btn.textContent = 'AR no disponible en este navegador';
-      msg.textContent = 'Prueba con Chrome (Android) o Safari (iPhone), asegúrate de estar en https.';
+  function renderDish(dish) {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const viewerId = 'viewer-' + dish.id;
+    const btnId = 'arBtn-' + dish.id;
+    const msgId = 'arMsg-' + dish.id;
+
+    card.innerHTML = `
+      <model-viewer
+        id="${viewerId}"
+        src="${dish.model}"
+        ${dish.ios_model ? `ios-src="${dish.ios_model}"` : ''}
+        alt="Modelo 3D de ${dish.name}"
+        ar
+        ar-modes="webxr scene-viewer quick-look"
+        camera-controls
+        auto-rotate
+        shadow-intensity="1"
+        exposure="0.9"
+      ></model-viewer>
+      <button id="${btnId}" class="ar-btn-big" disabled>Verificando soporte AR…</button>
+      <p id="${msgId}" class="ar-msg"></p>
+      <div class="dish-info">
+        <h2>${dish.name}</h2>
+        <p>${dish.description}</p>
+        <div class="price">${dish.price}</div>
+      </div>
+    `;
+    menu.appendChild(card);
+
+    const viewer = card.querySelector('#' + CSS.escape(viewerId));
+    const btn = card.querySelector('#' + CSS.escape(btnId));
+    const msg = card.querySelector('#' + CSS.escape(msgId));
+
+    viewer.addEventListener('ar-status', (event) => {
+      if (event.detail.status === 'session-started') {
+        msg.textContent = 'Sesión AR activa — mueve el celular para encontrar una superficie.';
+      } else if (event.detail.status === 'not-presenting') {
+        msg.textContent = '';
+      } else if (event.detail.status === 'failed') {
+        msg.textContent = 'No se pudo activar AR en este dispositivo/navegador.';
+      }
+    });
+
+    function checkSupport() {
+      if (viewer.canActivateAR) {
+        btn.disabled = false;
+        btn.textContent = 'Ver en mi mesa (AR)';
+      } else {
+        btn.disabled = true;
+        btn.textContent = 'AR no disponible en este navegador';
+        msg.textContent = 'Prueba con Chrome (Android) o Safari (iPhone), en https.';
+      }
     }
+
+    viewer.addEventListener('load', checkSupport);
+    setTimeout(checkSupport, 1500);
+
+    btn.addEventListener('click', () => viewer.activateAR());
   }
-
-  viewer.addEventListener('load', checkSupport);
-  setTimeout(checkSupport, 1500);
-
-  btn.addEventListener('click', () => {
-    viewer.activateAR();
-  });
 </script>
+
 </body>
 </html>

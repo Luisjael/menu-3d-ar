@@ -1,0 +1,10 @@
+[
+  {
+    "id": "demo-astronauta",
+    "name": "Modelo de prueba",
+    "description": "Este es el modelo de muestra. Reemplaza este objeto por tu plato real cuando tengas el .glb exportado de RealityScan.",
+    "price": "RD$ 0",
+    "model": "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
+    "ios_model": "https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+  }
+]
