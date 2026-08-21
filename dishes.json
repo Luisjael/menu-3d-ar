@@ -1,10 +1,9 @@
 [
   {
-    "id": "demo-astronauta",
-    "name": "Modelo de prueba",
-    "description": "Este es el modelo de muestra. Reemplaza este objeto por tu plato real cuando tengas el .glb exportado de RealityScan.",
-    "price": "RD$ 0",
-    "model": "https://modelviewer.dev/shared-assets/models/Astronaut.glb",
-    "ios_model": "https://modelviewer.dev/shared-assets/models/Astronaut.usdz"
+    "id": "hamburguesa-papas",
+    "name": "Hamburguesa con papas",
+    "description": "Hamburguesa clásica servida con papas fritas — modelo de muestra para probar el flujo de AR antes de escanear tus platos reales.",
+    "price": "RD$ 450",
+    "model": "https://static.poly.pizza/7899a872-8b89-424a-af7c-43dd347ffc6b.glb"
   }
 ]
