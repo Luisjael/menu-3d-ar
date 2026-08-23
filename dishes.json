@@ -1,9 +1,9 @@
 [
   {
-    "id": "hamburguesa-papas",
-    "name": "Hamburguesa con papas",
-    "description": "Hamburguesa clásica servida con papas fritas — modelo de muestra para probar el flujo de AR antes de escanear tus platos reales.",
+    "id": "plato-tipico",
+    "name": "Plato del día",
+    "description": "Arroz, habichuelas rojas, carne guisada y plátano maduro.",
     "price": "RD$ 450",
-    "model": "https://static.poly.pizza/7899a872-8b89-424a-af7c-43dd347ffc6b.glb"
+    "model": "models/plato-tipico.glb"
   }
 ]
