@@ -88,6 +88,20 @@
     color:var(--olive);
     margin-top:10px;
   }
+  .scale-control{
+    padding:12px 22px 0;
+    font-family:'Courier New', monospace;
+    font-size:12px;
+    color:#6b6255;
+  }
+  .scale-control label{
+    display:block;
+    margin-bottom:4px;
+  }
+  .scale-control input[type="range"]{
+    width:100%;
+    accent-color:var(--clay);
+  }
   .ar-btn-big{
     display:block;
     width:calc(100% - 44px);
@@ -163,6 +177,8 @@
     const viewerId = 'viewer-' + dish.id;
     const btnId = 'arBtn-' + dish.id;
     const msgId = 'arMsg-' + dish.id;
+    const scaleId = 'scale-' + dish.id;
+    const scaleLabelId = 'scaleLabel-' + dish.id;
 
     card.innerHTML = `
       <model-viewer
@@ -174,12 +190,16 @@
         ar-modes="webxr scene-viewer quick-look"
         ar-scale="fixed"
         ar-placement="floor"
-        scale="1 1 1"
+        scale="0.11 0.11 0.11"
         camera-controls
         auto-rotate
         shadow-intensity="1"
         exposure="0.9"
       ></model-viewer>
+      <div class="scale-control">
+        <label for="${scaleId}">Tamaño: <span id="${scaleLabelId}">11%</span></label>
+        <input type="range" id="${scaleId}" min="1" max="100" value="11" step="1">
+      </div>
       <button id="${btnId}" class="ar-btn-big" disabled>Verificando soporte AR…</button>
       <p id="${msgId}" class="ar-msg"></p>
       <div class="dish-info">
@@ -193,6 +213,15 @@
     const viewer = card.querySelector('#' + CSS.escape(viewerId));
     const btn = card.querySelector('#' + CSS.escape(btnId));
     const msg = card.querySelector('#' + CSS.escape(msgId));
+    const scaleInput = card.querySelector('#' + CSS.escape(scaleId));
+    const scaleLabel = card.querySelector('#' + CSS.escape(scaleLabelId));
+
+    scaleInput.addEventListener('input', () => {
+      const pct = scaleInput.value;
+      const factor = (pct / 100).toFixed(2);
+      viewer.setAttribute('scale', `${factor} ${factor} ${factor}`);
+      scaleLabel.textContent = pct + '%';
+    });
 
     viewer.addEventListener('ar-status', (event) => {
       if (event.detail.status === 'session-started') {
