@@ -1,8 +1,8 @@
 [
   {
     "id": "plato-tipico",
-    "name": "Plato del día",
-    "description": "Arroz, habichuelas rojas, carne guisada y plátano maduro.",
+    "name": "Pollo guisado con arroz",
+    "description": "Pollo guisado, arroz blanco, habichuelas, tostones, ensalada de repollo, tomate y aguacate.",
     "price": "RD$ 450",
     "photo": "photos/plato-tipico.jpg",
     "model": "models/plato-tipico.glb"
