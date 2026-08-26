@@ -4,6 +4,7 @@
     "name": "Plato del día",
     "description": "Arroz, habichuelas rojas, carne guisada y plátano maduro.",
     "price": "RD$ 450",
+    "photo": "photos/plato-tipico.jpg",
     "model": "models/plato-tipico.glb"
   }
 ]

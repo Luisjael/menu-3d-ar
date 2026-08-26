@@ -62,12 +62,22 @@
     overflow:hidden;
     box-shadow:0 6px 24px rgba(28,23,18,0.08);
   }
+  .dish-photo{
+    width:100%;
+    height:280px;
+    object-fit:cover;
+    display:block;
+    background:#e2d5b8;
+  }
   model-viewer{
     width:100%;
     height:340px;
     background:radial-gradient(circle at 50% 30%, #efe6d3, #e2d5b8);
     --poster-color: transparent;
+    display:none;
   }
+  .card.viewing-3d model-viewer{ display:block; }
+  .card.viewing-3d .dish-photo{ display:none; }
   .dish-info{
     padding:20px 22px 4px;
     border-top:1px solid var(--line);
@@ -108,6 +118,22 @@
     cursor:default;
   }
   .ar-btn-big:active:not(:disabled){opacity:0.85;}
+  .close-3d-btn{
+    display:none;
+    width:calc(100% - 44px);
+    margin:8px 22px 0;
+    padding:10px;
+    background:transparent;
+    color:var(--clay);
+    border:1px solid var(--clay);
+    border-radius:3px;
+    font-family:'Courier New', monospace;
+    font-size:12px;
+    letter-spacing:0.06em;
+    text-transform:uppercase;
+    cursor:pointer;
+  }
+  .card.viewing-3d .close-3d-btn{ display:block; }
   .ar-msg{
     text-align:center;
     font-family:'Courier New', monospace;
@@ -138,7 +164,7 @@
 <div id="menu"></div>
 
 <div class="notice">
-  <b>Cómo agregar un plato nuevo:</b> edita el archivo <code>dishes.json</code> — agrega un objeto nuevo con el nombre, descripción, precio, y el link a tu archivo <code>.glb</code> (guárdalo en la carpeta <code>models/</code>). No hay que tocar este archivo HTML.
+  <b>Cómo agregar un plato nuevo:</b> edita el archivo <code>dishes.json</code> — agrega un objeto nuevo con el nombre, descripción, precio, foto, y el link a tu archivo <code>.glb</code>. No hay que tocar este archivo HTML.
 </div>
 
 <script>
@@ -162,9 +188,11 @@
 
     const viewerId = 'viewer-' + dish.id;
     const btnId = 'arBtn-' + dish.id;
+    const closeBtnId = 'closeBtn-' + dish.id;
     const msgId = 'arMsg-' + dish.id;
 
     card.innerHTML = `
+      <img class="dish-photo" src="${dish.photo || ''}" alt="Foto de ${dish.name}">
       <model-viewer
         id="${viewerId}"
         src="${dish.model}"
@@ -181,6 +209,7 @@
         exposure="0.9"
       ></model-viewer>
       <button id="${btnId}" class="ar-btn-big" disabled>Verificando soporte AR…</button>
+      <button id="${closeBtnId}" class="close-3d-btn">Volver a la foto</button>
       <p id="${msgId}" class="ar-msg"></p>
       <div class="dish-info">
         <h2>${dish.name}</h2>
@@ -192,7 +221,12 @@
 
     const viewer = card.querySelector('#' + CSS.escape(viewerId));
     const btn = card.querySelector('#' + CSS.escape(btnId));
+    const closeBtn = card.querySelector('#' + CSS.escape(closeBtnId));
     const msg = card.querySelector('#' + CSS.escape(msgId));
+
+    closeBtn.addEventListener('click', () => {
+      card.classList.remove('viewing-3d');
+    });
 
     viewer.addEventListener('ar-status', (event) => {
       if (event.detail.status === 'session-started') {
@@ -218,7 +252,10 @@
     viewer.addEventListener('load', checkSupport);
     setTimeout(checkSupport, 1500);
 
-    btn.addEventListener('click', () => viewer.activateAR());
+    btn.addEventListener('click', () => {
+      card.classList.add('viewing-3d');
+      viewer.activateAR();
+    });
   }
 </script>
 
