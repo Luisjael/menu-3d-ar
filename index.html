@@ -1,263 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Menú 3D — Ver en tu mesa</title>
-<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
-<style>
-  :root{
-    --ink:#1c1712;
-    --cream:#f7f1e6;
-    --clay:#b5502e;
-    --olive:#5c6b47;
-    --line:#d8cdb8;
-  }
-  *{box-sizing:border-box;margin:0;padding:0;}
-  body{
-    font-family:'Georgia', 'Times New Roman', serif;
-    background:var(--cream);
-    color:var(--ink);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    padding:24px 16px 60px;
-  }
-  header{
-    text-align:center;
-    margin-bottom:22px;
-    max-width:480px;
-  }
-  .eyebrow{
-    font-family:'Courier New', monospace;
-    letter-spacing:0.18em;
-    text-transform:uppercase;
-    font-size:11px;
-    color:var(--clay);
-    margin-bottom:8px;
-  }
-  h1{
-    font-size:28px;
-    font-weight:400;
-    line-height:1.2;
-  }
-  p.sub{
-    font-size:14px;
-    color:#5a5248;
-    margin-top:8px;
-  }
-  #menu{
-    width:100%;
-    max-width:480px;
-    display:flex;
-    flex-direction:column;
-    gap:28px;
-  }
-  .card{
-    width:100%;
-    background:#fffdf8;
-    border:1px solid var(--line);
-    border-radius:4px;
-    overflow:hidden;
-    box-shadow:0 6px 24px rgba(28,23,18,0.08);
-  }
-  .dish-photo{
-    width:100%;
-    height:280px;
-    object-fit:contain;
-    display:block;
-    background:#e2d5b8;
-  }
-  model-viewer{
-    width:100%;
-    height:340px;
-    background:radial-gradient(circle at 50% 30%, #efe6d3, #e2d5b8);
-    --poster-color: transparent;
-    display:none;
-  }
-  .card.viewing-3d model-viewer{ display:block; }
-  .card.viewing-3d .dish-photo{ display:none; }
-  .dish-info{
-    padding:20px 22px 4px;
-    border-top:1px solid var(--line);
-  }
-  .dish-info h2{
-    font-size:20px;
-    font-weight:400;
-  }
-  .dish-info p{
-    font-size:13.5px;
-    color:#6b6255;
-    margin-top:6px;
-    line-height:1.5;
-  }
-  .price{
-    font-family:'Courier New', monospace;
-    font-size:15px;
-    color:var(--olive);
-    margin-top:10px;
-  }
-  .ar-btn-big{
-    display:block;
-    width:calc(100% - 44px);
-    margin:14px 22px 0;
-    padding:14px;
-    background:var(--clay);
-    color:#fff;
-    border:none;
-    border-radius:3px;
-    font-family:'Courier New', monospace;
-    font-size:13px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    cursor:pointer;
-  }
-  .ar-btn-big:disabled{
-    background:#c9beac;
-    cursor:default;
-  }
-  .ar-btn-big:active:not(:disabled){opacity:0.85;}
-  .close-3d-btn{
-    display:none;
-    width:calc(100% - 44px);
-    margin:8px 22px 0;
-    padding:10px;
-    background:transparent;
-    color:var(--clay);
-    border:1px solid var(--clay);
-    border-radius:3px;
-    font-family:'Courier New', monospace;
-    font-size:12px;
-    letter-spacing:0.06em;
-    text-transform:uppercase;
-    cursor:pointer;
-  }
-  .card.viewing-3d .close-3d-btn{ display:block; }
-  .ar-msg{
-    text-align:center;
-    font-family:'Courier New', monospace;
-    font-size:11px;
-    color:#8a8171;
-    padding:8px 16px 20px;
-  }
-  .notice{
-    max-width:480px;
-    margin-top:26px;
-    font-size:12.5px;
-    color:#8a8171;
-    border-left:2px solid var(--clay);
-    padding-left:12px;
-    line-height:1.6;
-  }
-  .notice b{color:var(--ink);}
-</style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>El Fogón — Menú en tu mesa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;1,500&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
-<header>
-  <div class="eyebrow">Menú Aumentado</div>
-  <h1 id="pageTitle">Toca "Ver en mi mesa" en cualquier plato</h1>
-  <p class="sub" id="pageSub">Cargando menú…</p>
+<header class="hero">
+  <span class="eyebrow">El Fogón · Comida criolla</span>
+  <h1 class="title">El menú se sirve <em>en tu mesa</em></h1>
+  <p class="subtitle">Toca "Ver en mi mesa" en cualquier plato y mira el tamaño real antes de pedir — directo desde la cámara de tu teléfono.</p>
+  <span class="hero-note"><span class="dot"></span> AR disponible en Chrome (Android) y Safari (iPhone)</span>
 </header>
 
-<div id="menu"></div>
+<div class="escama-edge"></div>
 
-<div class="notice">
-  <b>Cómo agregar un plato nuevo:</b> edita el archivo <code>dishes.json</code> — agrega un objeto nuevo con el nombre, descripción, precio, y el link a tu archivo <code>.glb</code> (guárdalo en la carpeta <code>models/</code>). No hay que tocar este archivo HTML.
-</div>
+<nav class="categorias" id="categorias"></nav>
 
-<script>
-  const menu = document.getElementById('menu');
-  const pageSub = document.getElementById('pageSub');
+<main>
+  <div id="contenedor-menu"></div>
+</main>
 
-  fetch('dishes.json')
-    .then(res => res.json())
-    .then(dishes => {
-      pageSub.textContent = 'Este es un demo. Reemplaza los platos editando dishes.json.';
-      dishes.forEach(dish => renderDish(dish));
-    })
-    .catch(err => {
-      pageSub.textContent = 'No se pudo cargar dishes.json — revisa que el archivo exista.';
-      console.error(err);
-    });
+<div class="escama-edge on-panel flip"></div>
+<footer>
+  Hecho con <strong>Software Studio</strong> — menús con AR para restaurantes.
+</footer>
 
-  function renderDish(dish) {
-    const card = document.createElement('div');
-    card.className = 'card';
-
-    const viewerId = 'viewer-' + dish.id;
-    const btnId = 'arBtn-' + dish.id;
-    const closeBtnId = 'closeBtn-' + dish.id;
-    const msgId = 'arMsg-' + dish.id;
-
-    card.innerHTML = `
-      <img class="dish-photo" src="${dish.photo || ''}" alt="Foto de ${dish.name}">
-      <model-viewer
-        id="${viewerId}"
-        src="${dish.model}"
-        ${dish.ios_model ? `ios-src="${dish.ios_model}"` : ''}
-        alt="Modelo 3D de ${dish.name}"
-        ar
-        ar-modes="webxr scene-viewer quick-look"
-        ar-scale="auto"
-        ar-placement="floor"
-        scale="0.11 0.11 0.11"
-        camera-controls
-        auto-rotate
-        shadow-intensity="1"
-        exposure="0.9"
-      ></model-viewer>
-      <button id="${btnId}" class="ar-btn-big" disabled>Verificando soporte AR…</button>
-      <button id="${closeBtnId}" class="close-3d-btn">Volver a la foto</button>
-      <p id="${msgId}" class="ar-msg"></p>
-      <div class="dish-info">
-        <h2>${dish.name}</h2>
-        <p>${dish.description}</p>
-        <div class="price">${dish.price}</div>
-      </div>
-    `;
-    menu.appendChild(card);
-
-    const viewer = card.querySelector('#' + CSS.escape(viewerId));
-    const btn = card.querySelector('#' + CSS.escape(btnId));
-    const closeBtn = card.querySelector('#' + CSS.escape(closeBtnId));
-    const msg = card.querySelector('#' + CSS.escape(msgId));
-
-    closeBtn.addEventListener('click', () => {
-      card.classList.remove('viewing-3d');
-    });
-
-    viewer.addEventListener('ar-status', (event) => {
-      if (event.detail.status === 'session-started') {
-        msg.textContent = 'Sesión AR activa — mueve el celular para encontrar una superficie.';
-      } else if (event.detail.status === 'not-presenting') {
-        msg.textContent = '';
-      } else if (event.detail.status === 'failed') {
-        msg.textContent = 'No se pudo activar AR en este dispositivo/navegador.';
-      }
-    });
-
-    function checkSupport() {
-      if (viewer.canActivateAR) {
-        btn.disabled = false;
-        btn.textContent = 'Ver en mi mesa (AR)';
-      } else {
-        btn.disabled = true;
-        btn.textContent = 'AR no disponible en este navegador';
-        msg.textContent = 'Prueba con Chrome (Android) o Safari (iPhone), en https.';
-      }
-    }
-
-    viewer.addEventListener('load', checkSupport);
-    setTimeout(checkSupport, 1500);
-
-    btn.addEventListener('click', () => {
-      card.classList.add('viewing-3d');
-      viewer.activateAR();
-    });
-  }
-</script>
-
+<script src="app.js"></script>
 </body>
 </html>
