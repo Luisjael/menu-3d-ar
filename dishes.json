@@ -61,5 +61,14 @@
     "precio": "RD$180",
     "foto": null,
     "modelo": null
-  }
+  },
+{
+  "id": "prueba-tenis",
+  "categoria": "Prueba",
+  "nombre": "Prueba AR - Tenis",
+  "descripcion": "Modelo de prueba para validar AR",
+  "precio": "RD$0",
+  "foto": "photos/plato-tipico.jpg",
+  "modelo": "models/prueba-tenis.glb"
+}
 ]
